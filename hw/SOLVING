@@ -1,0 +1,14 @@
+Answers by Felipe Tavoni
+
+1)
+    d) Yes, outpus are idential. Thay is expected sice we are converting a assembly code to a x86 architecture. So, instructions should be very similar, close to identical.
+
+    e) They are similar, but not identical. Since it was written in a different assembly language, it's possible to spot few differences when disassembling through another tool.
+
+    f) Yes. Code has successfully booted in QEMU. The following text can be seen.
+        SeaBIOS (version 1.15.0-1)
+        Booting from Hard Disk...
+        Hello World
+
+    i) Comparing hw2.bin with eg.bin, there are some differences, mainly on their memory positions. hw.bin have more defined memory positions than hw2.bin.
+        As for their instructions, they still very similar, with differences only in jmp instruction.
