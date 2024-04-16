@@ -1,14 +1,28 @@
 Answers by Felipe Tavoni
 
 1)
-    d) Yes, outpus are idential. Thay is expected sice we are converting a assembly code to a x86 architecture. So, instructions should be very similar, close to identical.
+    d) Yes, outputs are idential. 
+       That should be expected once we are converting a assembly code to machine code of a x86 architecture. 
+       So, instructions should be very similar, practicaly identical.
 
-    e) They are similar, but not identical. Since it was written in a different assembly language, it's possible to spot few differences when disassembling through another tool.
+    e) They disassembled binary is similar to the AT&T file, but not identical. 
+       There are no visible ASCII in the disassembled one, since their hexadecimal values are used. 
+       Also, registers and instructions are very close to the original one. The jmp instruction cannot refer the label anymore, but the memory position.
 
     f) Yes. Code has successfully booted in QEMU. The following text can be seen.
-        SeaBIOS (version 1.15.0-1)
-        Booting from Hard Disk...
-        Hello World
+       """
+       SeaBIOS (version 1.15.0-1)
+       Booting from Hard Disk...
+       Hello World
+       """
 
-    i) Comparing hw2.bin with eg.bin, there are some differences, mainly on their memory positions. hw.bin have more defined memory positions than hw2.bin.
-        As for their instructions, they still very similar, with differences only in jmp instruction.
+    g) Booting hw.S in a real hardware did not worked. The following message was displayed:
+       """
+       File "/boot/ not found"
+       """
+   
+    h) By building hw-boot.S (and its .bin) through GNU build chain, it resulted in the same issue.
+
+    i) When comparing hw2.bin with hw.bin, the differences are concentrated mainly on their memory positions. 
+       hw.bin have more "friendly" memory positions than hw2.bin, which seems to index memory positions.
+       As for their instructions, they continue to be very similar, with differences only in jmp instruction, as stated before.

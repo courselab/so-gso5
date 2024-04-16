@@ -1,11 +1,14 @@
 # AT&T version of eg-01.asm by Felipe Tavoni
-# Changes to address item i)
-
-    .code16			# Set 16-bit mode
 
     .global _start
 
 _start:
+
+    jmp begin
+    .fill 61, 1
+
+begin:
+    .code16			# Set 16-bit mode
 
     movb $0xe, %ah  # set BIOS teletype mode
 

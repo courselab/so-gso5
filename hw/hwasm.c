@@ -1,8 +1,10 @@
 /**
  * Code created by Felipe Tavoni
+ *
  * A parser to convert an AT&T "Hello World" code into Machine code.
  * As per requirements, it could be a "specific-purpose implementation that works only with the given input."
  *  There might be some enhancements that can be done in order to provide a better generic parsing.
+ *  Hence, this code is focused on parsing the specific file.
  */
 #include "stdio.h"
 #include "stdlib.h"
@@ -10,7 +12,27 @@
 
 #define MAX_LINE_LENGTH 100
 
-unsigned char  extractHex(const char *instruction) {
+char* trimTabs(char *str) {
+
+    int idx = 0, j, k = 0;
+    char *str1 = (char *) malloc(MAX_LINE_LENGTH * sizeof(char));
+    
+    while (str[idx] == ' ' || str[idx] == '\t') {
+        idx++;
+    }
+
+    for (j = idx; str[j] != '\0'; j++) {
+        str1[k] = str[j];
+        k++;
+    }
+
+    str1[k] = '\0';
+
+    free(str);
+    return str1;
+}
+
+unsigned char extractHex(const char *instruction) {
 
     const char *ptr = strchr(instruction, '$');
     unsigned int value;
@@ -117,7 +139,8 @@ int main(int argc, char *argv[]) {
 
     char *line = (char *) malloc(MAX_LINE_LENGTH * sizeof(char));
     while (fgets(line, MAX_LINE_LENGTH * sizeof(char), inputFile) != NULL) {
-        if ((strncmp(line, ".code", 5) != 0) || (line[0] != '#')) {
+        line = trimTabs(line);
+        if ((strncmp(line, ".code", 5) != 0) && (line[0] != '#') && (line[0] != '\n')) {
             convertInstruction(line, outputFile);
         }
     }

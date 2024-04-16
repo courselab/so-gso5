@@ -1,0 +1,5 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: so-gso5
+Upstream-Contact: FelTavoni <56005905+FelTavoni@users.noreply.github.com>
+Source: https://github.com/courselab/so-gso5.git
+
