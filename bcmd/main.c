@@ -11,33 +11,33 @@
 
 #include "bios.h"
 #include "utils.h"
+#include "time.h"
 
 #define PROMPT "$ "		/* Prompt sign.      */
 #define SIZE 20			/* Read buffer size. */
 
-char buffer[SIZE];		/* Read buffer.      */
+char buffer[SIZE]; /* Read buffer.      */
 
-int main()
-{
-  clear();
-  
-  println  ("Boot Command 1.0");
+int main() {
+    clear();
 
-  while (1)
-    {
-      print(PROMPT);		/* Show prompt.               */
-      readln(buffer);		/* Read use input.            */
+    println("Boot Command 1.0");
 
-      if (buffer[0])		/* Execute built-in command.  */
-	{
-	  if (!strcmp(buffer,"help"))
-	    println("A Beattles's song.");
-	  else 
-	    println("Unkown command.");
-	}
+    while (1) {
+        print(PROMPT); /* Show prompt.               */
+        readln(buffer); /* Read use input.            */
+
+        if (buffer[0]) /* Execute built-in command.  */
+        {
+            if (!strcmp(buffer, "time")) {
+                time();
+            } else if (!strcmp(buffer, "help")) {
+                println("A Beattles's song.");
+            } else {
+                println("Unkown command.");
+            }
+        }
     }
-  
-  return 0;
 
+    return 0;
 }
-
