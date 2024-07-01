@@ -1,0 +1,9 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: mydos
+Upstream-Contact: Felipe Tavoni <56005905+FelTavoni@users.noreply.github.com>
+Source: https://github.com/courselab/so-gso5.git
+
+Files: */.dist
+Copyright: Felipe Tavoni <56005905+FelTavoni@users.noreply.github.com>
+License: CC0-1.0
+
