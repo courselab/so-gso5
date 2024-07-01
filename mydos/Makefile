@@ -431,7 +431,7 @@ clean-export:
 
 -include .dist
 
-ifneq (yes,$(DOCM4_DIST))
+ifeq (yes,$(DOCM4_DIST))
 
 
 docm4_deps = ../../tools/docm4.m4 ../../tools/bintools.m4
