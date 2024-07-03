@@ -14,78 +14,26 @@
 
 
 
-# By default, the bootable program name will by $(dosname).bin
-# If you export this directory to extend the example as part of a programming
-# exercise, redefine $(dos) to reflect your own DOS name, say
-# dos = "amazingOS" 
-
-dos=GladiaDOS
-
 # Build the OS and an example user program.
 
-all: $(dos).bin prog.bin
-
-# Link all objects needed by the OS.
-
-$(dos).bin : bootloader.o bios1.o kernel.o kaux.o bios2.o logo.o syscall.o 
-	ld -melf_i386 -T tydos.ld --orphan-handling=discard $^ -o $@
-
-# Rules to build objects from either C or assembly code.
+all: tyfsedit
 
 %.o : %.c
-	gcc -m16 -O0 --freestanding -fno-pic -fcf-protection=none -c $(CFLAGS) $< -o $@
+	gcc -c $(CPPFLAGS) $(CFLAGS) $< -o $@
 
-%.o : %.S
-	as -32 $< -o $@
+tyfsedit : tyfsedit.o
+	gcc $< -lm -o $@
 
-bootloader.o : bios1.h kernel.h 
-kernel.o : bios1.h bios2.h kernel.h kaux.h   
-kaux.o:    bios2.h kaux.h   
-
-$(dos).bin : .EXTRA_PREREQS = rt0.o tydos.ld
-
-# Rules to build the user programs
-# You would add new programs to this variable if bulding other user programs.
-# The user library is automatically added by the linker script.
-
-progs = prog.bin
-
-$(progs)  : %.bin : %.o libtydos.a 
-	ld -melf_i386 -T prog.ld --orphan-handling=discard $< -o $@
-
-$(progs:%.bin=%.o) : %.o : %.c tydos.h
-	gcc -m16 -O0 --freestanding -fno-pic -fcf-protection=none -c $(CFLAGS) $< -o $@
-
-$(progs:%.bin=%.o) : tydos.h
-
-$(progs:%.bin=%.o) : .EXTRA_PREREQS = prog.ld
-
-# Creates a 1.44 MB zeroed floppy image (2880 * 512 bytes)
-#	Build ./tyfsedit and format file
+# Create a 1.44 MB floppy image (2880 * 512 bytes)
 
 disk.img:
-	(cd tyfs && make)
 	rm -f $@
 	dd if=/dev/zero of=$@ count=2880
-	./tyfs/tyfsedit < format.cmd
-	(cd tyfs && make clean)
 
-# Recipes to build the user library.
-
-libtydos.o: libtydos.c tydos.h
-	gcc -m16 -O0 --freestanding -fno-pic -fcf-protection=none -c $(CFLAGS) $< -o $@
-
-libtydos.o : tydos.h
-
-libtydos.a : libtydos.o
-	ar rcs $@ $^
-
-# Housekeeping.
-
-.PHONY: clean
+.PHONY: clean img
 
 clean:
-	rm -f *.bin *.o *~ *.s *.a
+	rm -f *.o tyfsedit img
 
 
 ## Bintools: convenience rules for inspecting binary files
@@ -379,7 +327,7 @@ stick: $(IMG)
 
 
 
-EXPORT_FILES = Makefile README bootloader.c kernel.c kernel.h kaux.c kaux.h bios1.S bios1.h bios2.S bios2.h syscall.c tydos.ld  libtydos.c tydos.h tydos.h prog.c prog.ld rt0.S  logo.c
+EXPORT_FILES = Makefile README tyfsedit.c debug.h
 EXPORT_NEW_FILES = NOTEBOOK
 
 
@@ -388,7 +336,7 @@ EXPORT_NEW_FILES = NOTEBOOK
 ## They are used by SYSeg to create a self-contained distribution bundle
 ## of the source directory, suitable for exporting project files.
 
-TARNAME=$(dos)
+TARNAME=tyfs
 
 
 syseg-export export:
@@ -433,7 +381,7 @@ clean-export:
 
 -include .dist
 
-ifeq (yes,$(DOCM4_DIST))
+ifneq (yes,$(DOCM4_DIST))
 
 
 docm4_deps = ../../tools/docm4.m4 ../../tools/bintools.m4
