@@ -43,7 +43,7 @@ void shell()
 {
   int i;
   clear();
-  kwrite ("TinyDOS 1.0\n");
+  kwrite ("GladiaDOS 1.0\n");
 
   while (go_on)
     {
@@ -98,15 +98,15 @@ struct cmd_t cmds[] =
 
 void f_help()
 {
-  kwrite ("...me, Obi-Wan, you're my only hope!\n\n");
-  kwrite ("   But we can try also some commands:\n");
-  kwrite ("      exec    (to execute an user program example\n");
-  kwrite ("      quit    (to exit TyDOS)\n");
+  kwrite ("Mobilize your system resources and unleash your fury!\n\n");
+  kwrite ("   Here are some commands for you:\n");
+  kwrite ("      exec    (Catapult an example program\n");
+  kwrite ("      quit    (Raise your white flag)\n");
 }
 
 void f_quit()
 {
-  kwrite ("Program halted. Bye.");
+  kwrite ("You have conceeded. Bye.");
   go_on = 0;
 }
 

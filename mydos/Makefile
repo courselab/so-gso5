@@ -19,7 +19,7 @@
 # exercise, redefine $(dos) to reflect your own DOS name, say
 # dos = "amazingOS" 
 
-dos=$(shell basename $$(realpath .))
+dos=GladiaDOS
 
 # Build the OS and an example user program.
 
