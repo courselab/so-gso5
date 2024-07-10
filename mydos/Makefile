@@ -69,6 +69,7 @@ disk.img:
 	dd if=/dev/zero of=$@ count=2880
 	./tyfs/tyfsedit < format.cmd
 	(cd tyfs && make clean)
+	dd if=$(dos).bin bs=1 of=disk.img skip=16 seek=16 conv=notrunc
 
 # Recipes to build the user library.
 
