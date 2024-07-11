@@ -99,6 +99,7 @@ struct cmd_t cmds[] =
   {
     {"help",    f_help},     /* Print a help message.       */
     {"list",    f_list},     /* List files in image.        */
+    {"exec",    f_exec},     /* Executes a program          */
     {"quit",    f_quit},     /* Exit TyDOS.                 */
     {0, 0}
   };
@@ -152,10 +153,48 @@ void f_list() {
   }
 }
 
-/* Built-in shell command: example.
+/*
+  Function to execute user program from disk.
 
-   Execute an example user program which invokes a syscall.
+  1. Reads the file name from user input;
+  2. Calculates and loads the header of the tyFS headers;
+  3. Loads the file directory;
+  4. Locates the binary file in the directory;
+  5. Loads the program;
+  6. Execute the program.
+*/
+void f_exec() {
 
-  */
+  char binary_file_name[32];
+  kwrite("Input the program to be executed: ");
+  kread(binary_file_name);
 
-extern int main();
+  struct fs_header_t *fs_header = (struct fs_header_t *)0x7c00;
+  int initial_sector = 1 + fs_header->number_of_boot_sectors;
+  int sectors_to_read = fs_header->number_of_file_entries * 32 / 512 + 1;
+
+  int offset = fs_header->number_of_file_entries * 32 - (sectors_to_read - 1) * 512;
+  void *directory = (void *)(initial_sector * 512);
+  load_content(initial_sector, sectors_to_read, directory);
+  
+  int found = 0;
+  int binary_coordinate;
+  for (int i = 0; i < fs_header->number_of_file_entries; i++) {
+    char *file_name = directory + i * 32;
+    if (!strcmp(file_name, binary_file_name)) {
+      found = 1;
+      binary_coordinate = initial_sector + sectors_to_read + fs_header->max_file_size * i - 1;
+    }
+  }
+
+  if (!found) {
+    kwrite("Program not found.\n");
+    return;
+  }
+
+  void *program = (void *)(0xFE00);
+  void *program_sector_start = program - offset;
+  load_content(binary_coordinate, fs_header->max_file_size, program_sector_start);
+
+  kexec();
+}
