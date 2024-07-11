@@ -58,7 +58,7 @@ $(progs:%.bin=%.o) : %.o : %.c tydos.h
 
 $(progs:%.bin=%.o) : tydos.h
 
-$(progs:%.bin=%.o) : .EXTRA_PREREQS = prog.ld
+$(progs:%.bin=%.o) : .EXTRA_PREREQS = crt0.o prog.ld
 
 # Creates a 1.44 MB zeroed floppy image (2880 * 512 bytes)
 #	Build ./tyfsedit and format file
