@@ -39,4 +39,6 @@ void input (char *);
 void writexy(unsigned char, unsigned char, const char *);
 void clearxy(void);
 
+void load_content(int, int, void*);
+
 #endif  /* KLIB_H  */

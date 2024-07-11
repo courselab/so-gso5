@@ -89,4 +89,28 @@ int strcmp(const char *s1, const char *s2)
   return (*s1 - *s2);
 }
 
+void load_content(int block_coordinate, int sectors_to_read, void *target_addres) {
 
+  // Computes the head number for the disk access
+  int head_coordinate = (block_coordinate - 1) / 63;
+
+  // Computes the sector number within the cylinder for the disk access.
+  int sector_coordinate = (block_coordinate - 1) % 63 + 1;
+
+  // Perform disk I/O operations using BIOS interrupts 
+  __asm__ volatile(
+      "pusha \n"
+      "mov boot_drive, %%dl \n"
+      "mov $0x2, %%ah \n"
+      "mov %[sectToRead], %%al \n" // Sectors to read
+      "mov $0x0, %%ch \n"          // Cylinder coordinate
+      "mov %[sectCoord], %%cl \n"  // Sector coordinate
+      "mov %[headCoord], %%dh \n"  // Head coordinate
+      "mov %[targetAddr], %%bx \n" // Position to load
+      "int $0x13 \n"               // Call BIOS int 0x13 to read sectors
+      "popa \n" ::
+          [headCoord] "g"(head_coordinate),
+      [sectCoord] "g"(sector_coordinate),
+      [sectToRead] "g"(sectors_to_read),
+      [targetAddr] "g"(target_addres));
+}

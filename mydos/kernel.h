@@ -12,6 +12,8 @@
 #ifndef KERNEL_H
 #define KERNEL_H
 
+#define FS_SIGLEN 4
+
 /* This is kernel's entry function, which is called by the bootloader
    as soon as it loads the kernel from the this image. */
 
@@ -34,6 +36,9 @@ void shell();			/* Command interpreter. */
 void f_help();
 void f_exec();
 void f_quit();
+
+/* Implemented commands */
+void f_list();
 
 extern struct cmd_t
 {
