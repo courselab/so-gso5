@@ -1,11 +1,13 @@
 #    SPDX-FileCopyrightText: 2021 Monaco F. J. <monaco@usp.br>
 #    SPDX-FileCopyrightText: 2024 Felipe Tavoni <56005905+FelTavoni@users.noreply.github.com>
+#    SPDX-FileCopyrightText: 2024 katherincm <93104605+katherincm@users.noreply.github.com>
 #   
 #    SPDX-License-Identifier: GPL-3.0-or-later
 #
 #  This file is a derivative work from SYSeg (https://gitlab.com/monaco/syseg)
 #  and contains modifications carried out by the following author(s):
 #  Felipe Tavoni <56005905+FelTavoni@users.noreply.github.com>
+# katherincm <93104605+katherincm@users.noreply.github.com>
 
 	/* This source file implements a few low-level functions which are 
 	   easier to write directly in assembly. They are mostly BIOS service
