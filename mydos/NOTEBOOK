@@ -1,3 +1,52 @@
 #    SPDX-FileCopyrightText: 2024 Felipe Tavoni <56005905+FelTavoni@users.noreply.github.com>
 #   
 #    SPDX-License-Identifier: GPL-3.0-or-later
+
+Step 3.
+
+    To modify the DOS name, we've changed the values in logo.c and Makefile, as well as some messages to give a new face to our DOS.
+
+Step 4.
+
+    To remove the statically linked program, we had to follow the removal of specific points in code to not statically link the prog.c with kernel.c, making some Makefile adjustments and some linker adjustments.
+
+Step 5.
+
+    In this step, we have added a new step in Makefile to build the diskimage, with 1.44 MB (2880 * 512 bytes). Also, we've added a .cmd file that will automatically format the disk using the tyfs tool imported into project file. The disk should have 12 sectors reserved for boot, with files no more than 16 KBytes. whoami.txt is a dummy file added to the disk, to be listed in further exercise.
+
+Step 6-7.
+
+    To boot from the disk image, we should copy the program into the disk. After building GladiDOS.bin, we copy it to the disk, using 1 byte as block, skipping the 16 sectors for the reserved boot. After that Makefile command, we can execute make "disk.img/run" to run the DOS from image.
+
+Step 8.
+
+    One difficult step. To implement the listing function, we had to add a new function to kernel.c. At first, we had to load the file system header to get the coordinates so itś possible to search the files. Then, once the FS header is already in RAM, we are able to load all the information to locate the directory region. This is possible by using the BIOS disk service to load into RAM and go through the file names. To achieve that, we use plain C to load the header in a struct, and a assembly routine to use BIOS services and load the content.
+
+    // Code block used to recover, within a C code, the content of the memory through sectors coordinates, using BIOS disk services (int $0x13).
+    __asm__ volatile(
+        "pusha \n"
+        "mov boot_drive, %%dl \n"
+        "mov $0x2, %%ah \n"
+        "mov %[sectToRead], %%al \n" // Sectors to read
+        "mov $0x0, %%ch \n"          // Cylinder coordinate
+        "mov %[sectCoord], %%cl \n"  // Sector coordinate
+        "mov %[headCoord], %%dh \n"  // Head coordinate
+        "mov %[targetAddr], %%bx \n" // Position to load
+        "int $0x13 \n"               // Call BIOS int 0x13 to read sectors
+        "popa \n" ::
+        [headCoord] "g"(head_coordinate),
+        [sectCoord] "g"(sector_coordinate),
+        [sectToRead] "g"(sectors_to_read),
+        [targetAddr] "g"(target_addres));
+    }
+
+    Once we have the pointers ready to go, we iterate though files, listing their names.
+    Code has some comments explaining step by step of the procedures taken.
+
+Step 10.
+
+    Step 10 was the most challenging one.
+    Since we have implemented the "connection" between RAM and disk, we can reutilize it to load contents. At first, we need to load the directory to find the binary program. This can be done with one interaction.
+    Once located the file, we should now load the program. Once we've defined maximum file sizes, we can jump with an offset to the beggining of the program, loading it into RAM. Then, through a syscall created in assembly bios2.S called 'kexec', we can jump to the programs start, transfering the control to its execution.
+
+Overall, steps 8 and 10 were very challenging, mostly because their lack of debbugging, once we're operating in physical addresses. This dificulty blocked us in many moments, besides knowing where to point the execution, most of the times we've fallen in wrong addresses.
