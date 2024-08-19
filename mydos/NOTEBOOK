@@ -51,3 +51,8 @@ Step 10.
     Once located the file, we should now load the program. Once we've defined maximum file sizes, we can jump with an offset to the beggining of the program, loading it into RAM. Then, through a syscall created in assembly bios2.S called 'kexec', we can jump to the programs start, transfering the control to its execution.
 
 Overall, steps 8 and 10 were very challenging, mostly because their lack of debbugging, once we're operating in physical addresses. This dificulty blocked us in many moments, besides knowing where to point the execution, most of the times we've fallen in wrong addresses.
+
+EVALUATION
+===============
+
+Way to go! Nailed it!
